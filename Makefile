@@ -1,7 +1,7 @@
 -include .env
 export
 
-.PHONY: help dev build db-up db-down db-create-test db-setup db-backup db-restore migrate-up migrate-down test vet format tidy
+.PHONY: help dev build db-up db-down db-create-test db-setup db-backup db-restore migrate-up migrate-down seed test vet format tidy
 
 # ==============================================================================
 # Aurora Grand Hotel — Development Commands
@@ -60,6 +60,11 @@ migrate-up: ## รัน Database Migration (อัปเดต Schema ล่า
 migrate-down: ## ย้อนกลับ Database Migration ทั้งหมด
 	@if [ -z "$(DATABASE_URL)" ]; then echo "❌ DATABASE_URL is not set"; exit 1; fi
 	migrate -path apps/api/migrations -database "$(DATABASE_URL)" down -all
+
+seed: ## ใส่ข้อมูลเริ่มต้นสำหรับ Development (ใช้ docker compose exec ติดต่อ DB โดยตรง)
+	@echo "⏳ กำลังรัน Seed Script..."
+	@cat apps/api/seeds/development_seed.sql | docker compose exec -T db psql -U $(POSTGRES_USER) -d $(POSTGRES_DB)
+	@echo "✅ Seed สมบูรณ์"
 
 # --- Go Code Quality ---
 

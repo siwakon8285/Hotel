@@ -32,8 +32,9 @@ backups/
 *.sql
 *.dump
 *.backup
-# ยกเว้น migration files ที่อยู่ใน source code
+# ยกเว้น migration และ seed files ที่อยู่ใน source code
 !apps/api/migrations/**/*.sql
+!apps/api/seeds/**/*.sql
 
 # Editor / OS
 .DS_Store
