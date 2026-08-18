@@ -1,4 +1,7 @@
-.PHONY: help dev build db-up db-down db-backup db-restore test vet format tidy
+-include .env
+export
+
+.PHONY: help dev build db-up db-down db-create-test db-setup db-backup db-restore migrate-up migrate-down test vet format tidy
 
 # ==============================================================================
 # Aurora Grand Hotel — Development Commands
@@ -23,6 +26,16 @@ db-up: ## เริ่มเฉพาะ PostgreSQL service ใน background
 db-down: ## หยุด database service (ไม่ลบ volume)
 	docker compose stop db
 
+db-create-test: ## สร้าง Test Database ถ้ายังไม่มี (Idempotent)
+	@echo "⏳ Checking/Creating test database..."
+	@docker compose exec -T db psql -U $(POSTGRES_USER) -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = 'hotel_booking_test'" | grep -q 1 || docker compose exec -T db psql -U $(POSTGRES_USER) -d postgres -c "CREATE DATABASE hotel_booking_test"
+	@echo "✅ Test database ready"
+
+db-setup: db-up ## Start DB and create test database
+	@echo "⏳ Waiting for database to be ready..."
+	@sleep 3
+	@$(MAKE) db-create-test
+
 db-backup: ## สำรองข้อมูล PostgreSQL (เก็บไว้ใน backups/)
 	@mkdir -p backups
 	@echo "⏳ กำลังสำรองข้อมูล Database..."
@@ -37,6 +50,16 @@ db-restore: ## นำข้อมูล PostgreSQL กลับมา (ตัว
 	@echo "⏳ กำลังนำข้อมูล Database กลับมาที่ hotel_booking..."
 	@cat $(FILE) | docker compose exec -T db psql -U hotel_app -d hotel_booking
 	@echo "✅ นำข้อมูลกลับมาเรียบร้อย"
+
+# --- Migrations ---
+
+migrate-up: ## รัน Database Migration (อัปเดต Schema ล่าสุด)
+	@if [ -z "$(DATABASE_URL)" ]; then echo "❌ DATABASE_URL is not set"; exit 1; fi
+	migrate -path apps/api/migrations -database "$(DATABASE_URL)" up
+
+migrate-down: ## ย้อนกลับ Database Migration ทั้งหมด
+	@if [ -z "$(DATABASE_URL)" ]; then echo "❌ DATABASE_URL is not set"; exit 1; fi
+	migrate -path apps/api/migrations -database "$(DATABASE_URL)" down -all
 
 # --- Go Code Quality ---
 

@@ -16,6 +16,9 @@
 - Docker และ Docker Compose
 - Go 1.26
 - Make (สำหรับใช้งาน `Makefile`)
+- [golang-migrate](https://github.com/golang-migrate/migrate) (สำหรับ Database Migrations)
+  - macOS: `brew install golang-migrate`
+  - อื่นๆ: ดูวิธีติดตั้งในเว็บไซต์ของ golang-migrate
 
 ## 🚀 การติดตั้งและรันระบบ (Setup & Run)
 
@@ -53,12 +56,17 @@ Host machine
 
 ## 🛠️ การใช้งาน Makefile Commands
 
-- `make dev` — รันระบบทั้งหมดแบบ development
-- `make build` — คอมไพล์ Go API เพื่อตรวจสอบ
+- `make db-setup` — รัน PostgreSQL และสร้าง Test Database (`hotel_booking_test`) อัตโนมัติ
 - `make db-up` — รันเฉพาะ PostgreSQL ในโหมด background
 - `make db-down` — หยุด PostgreSQL
+- `make dev` — รัน Go API บนเครื่อง local
+- `make build` — คอมไพล์ Go API เพื่อตรวจสอบ
 - `make db-backup` — สำรองข้อมูล Database เก็บใน `backups/`
 - `make db-restore FILE=backups/xxx.sql` — คืนค่า Database จากไฟล์
+
+### Database Migrations
+- `make migrate-up` — รัน Migration สร้างโครงสร้างตารางล่าสุด
+- `make migrate-down` — ย้อนกลับ Migration ทั้งหมด (ลบตาราง)
 
 ## 🩺 การทำงานของ API และ Health Endpoints
 
