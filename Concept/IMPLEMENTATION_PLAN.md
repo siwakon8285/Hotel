@@ -5,7 +5,7 @@
 
 **Tech Decisions:**
 - Go HTTP Framework: **Chi** (stdlib-compatible, ตรง Concept + ใกล้เคียง net/http ตาม BACKEND.md)
-- Go Version: **1.23+**
+- Go Version: **1.26**
 - DB Driver: **pgx/v5**
 - Migration Tool: **golang-migrate**
 - Architecture: **Clean Architecture 3 Layers** (Domain / Application / Infrastructure)
@@ -132,7 +132,7 @@ apps/api/
 | สิ่งที่ทำ | รายละเอียด |
 |-----------|------------|
 | Monorepo structure | `apps/web/`, `apps/api/` (Clean Architecture), `docker/`, `docs/` |
-| Go module init | Go 1.23+, `go mod init` สำหรับ `apps/api/` |
+| Go module init | Go 1.26, `go mod init` สำหรับ `apps/api/` |
 | Backend config | `internal/config/config.go` — **Struct-based config**, ห้าม `os.Getenv()` ลอยๆ, validate required env vars |
 | Basic server | `cmd/server/main.go` — **Chi** HTTP router |
 | **Health endpoints** | `/health/live` — liveness probe (API ยังทำงาน, ไม่ต้องเช็ค dependency) |

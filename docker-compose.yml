@@ -1,0 +1,32 @@
+# ===================================
+# Aurora Grand Hotel — Docker Compose
+# ===================================
+# เริ่มระบบ: docker compose up --build
+# หยุดระบบ: docker compose down
+
+services:
+  # --- PostgreSQL Database ---
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      # ตั้ง timezone เป็น UTC — แปลงเป็น local ที่ชั้น application/frontend เท่านั้น
+      TZ: UTC
+      PGTZ: UTC
+    ports:
+      # ใช้ 5433 เป็น host port เพื่อไม่ชนกับ local PostgreSQL ที่ใช้ 5432
+      - "${POSTGRES_HOST_PORT:-5433}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+volumes:
+  postgres_data:
