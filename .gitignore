@@ -5,8 +5,8 @@
 
 # Go
 bin/
-apps/api/bin/
-apps/api/server
+backend/bin/
+backend/server
 *.exe
 *.exe~
 *.dll
@@ -33,8 +33,8 @@ backups/
 *.dump
 *.backup
 # ยกเว้น migration และ seed files ที่อยู่ใน source code
-!apps/api/migrations/**/*.sql
-!apps/api/seeds/**/*.sql
+!database/migrations/**/*.sql
+!database/seeds/**/*.sql
 
 # Editor / OS
 .DS_Store

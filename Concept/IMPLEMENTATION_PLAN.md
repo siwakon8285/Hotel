@@ -94,7 +94,7 @@ git checkout -b feature/02-database
 - Handler แปลง HTTP request → เรียก Use Case → แปลงผลลัพธ์เป็น HTTP response
 
 ```
-apps/api/
+backend/
 ├── cmd/
 │   └── server/
 │       └── main.go                    → App entry, router assembly
@@ -131,8 +131,8 @@ apps/api/
 
 | สิ่งที่ทำ | รายละเอียด |
 |-----------|------------|
-| Monorepo structure | `apps/web/`, `apps/api/` (Clean Architecture), `docker/`, `docs/` |
-| Go module init | Go 1.26, `go mod init` สำหรับ `apps/api/` |
+| Monorepo structure | `frontend/`, `backend/` (Clean Architecture), `docker/`, `docs/` |
+| Go module init | Go 1.26, `go mod init` สำหรับ `backend/` |
 | Backend config | `internal/config/config.go` — **Struct-based config**, ห้าม `os.Getenv()` ลอยๆ, validate required env vars |
 | Basic server | `cmd/server/main.go` — **Chi** HTTP router |
 | **Health endpoints** | `/health/live` — liveness probe (API ยังทำงาน, ไม่ต้องเช็ค dependency) |

@@ -54,7 +54,7 @@
 ```bash
 make dev
 ```
-*(หรือใช้ `cd apps/api && go run ./cmd/server`)*
+*(หรือใช้ `cd backend && go run ./cmd/server`)*
 
 ### 🏗️ Architecture during development
 

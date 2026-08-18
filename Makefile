@@ -13,10 +13,10 @@ help: ## แสดงคำอธิบายคำสั่งทั้งห�
 # --- Development ---
 
 dev: ## รัน Go API locally บนเครื่อง (รอ Database พร้อมก่อน)
-	cd apps/api && go run ./cmd/server
+	cd backend && go run ./cmd/server
 
 build: ## Build Go API binary สำหรับตรวจสอบ
-	cd apps/api && go build -o bin/server ./cmd/server
+	cd backend && go build -o bin/server ./cmd/server
 
 # --- Database ---
 
@@ -55,27 +55,27 @@ db-restore: ## นำข้อมูล PostgreSQL กลับมา (ตัว
 
 migrate-up: ## รัน Database Migration (อัปเดต Schema ล่าสุด)
 	@if [ -z "$(DATABASE_URL)" ]; then echo "❌ DATABASE_URL is not set"; exit 1; fi
-	migrate -path apps/api/migrations -database "$(DATABASE_URL)" up
+	migrate -path database/migrations -database "$(DATABASE_URL)" up
 
 migrate-down: ## ย้อนกลับ Database Migration ทั้งหมด
 	@if [ -z "$(DATABASE_URL)" ]; then echo "❌ DATABASE_URL is not set"; exit 1; fi
-	migrate -path apps/api/migrations -database "$(DATABASE_URL)" down -all
+	migrate -path database/migrations -database "$(DATABASE_URL)" down -all
 
 seed: ## ใส่ข้อมูลเริ่มต้นสำหรับ Development (ใช้ docker compose exec ติดต่อ DB โดยตรง)
 	@echo "⏳ กำลังรัน Seed Script..."
-	@cat apps/api/seeds/development_seed.sql | docker compose exec -T db psql -U $(POSTGRES_USER) -d $(POSTGRES_DB)
+	@cat database/seeds/development_seed.sql | docker compose exec -T db psql -U $(POSTGRES_USER) -d $(POSTGRES_DB)
 	@echo "✅ Seed สมบูรณ์"
 
 # --- Go Code Quality ---
 
-test: ## รัน Unit Tests ใน apps/api
-	cd apps/api && go test -v ./...
+test: ## รัน Unit Tests ใน backend
+	cd backend && go test -v ./...
 
 vet: ## รัน Go Vet เพื่อตรวจสอบปัญหาในโค้ด
-	cd apps/api && go vet ./...
+	cd backend && go vet ./...
 
 format: ## รัน Go fmt เพื่อจัดรูปแบบโค้ด
-	cd apps/api && go fmt ./...
+	cd backend && go fmt ./...
 
 tidy: ## รัน go mod tidy จัดการ dependencies
-	cd apps/api && go mod tidy
+	cd backend && go mod tidy
