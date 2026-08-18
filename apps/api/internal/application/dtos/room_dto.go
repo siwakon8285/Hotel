@@ -41,9 +41,19 @@ type RoomResponse struct {
 	Data RoomDTO `json:"data"`
 }
 
-// FormatPrice formats satang to THB string
+// FormatPrice formats satang to THB string without using floats
 func FormatPrice(satang int64) string {
-	return fmt.Sprintf("%.2f", float64(satang)/100.0)
+	baht := satang / 100
+	stg := satang % 100
+	if stg < 0 {
+		stg = -stg
+	}
+
+	// Handle negative values properly (e.g. -50 satang -> "-0.50")
+	if satang < 0 && baht == 0 {
+		return fmt.Sprintf("-0.%02d", stg)
+	}
+	return fmt.Sprintf("%d.%02d", baht, stg)
 }
 
 func MapRoomType(rt *entities.RoomType) *RoomTypeDTO {

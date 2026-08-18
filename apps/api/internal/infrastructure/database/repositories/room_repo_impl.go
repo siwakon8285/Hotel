@@ -132,15 +132,17 @@ func (r *roomRepoImpl) Search(ctx context.Context, filter domainRepos.RoomSearch
 
 	// Filter by Date (Availability Check)
 	if filter.CheckIn != nil && filter.CheckOut != nil {
-		// Use LEFT JOIN to find overlapping active bookings. If b.id is NULL, no overlap exists.
+		// Use NOT EXISTS to check for overlapping bookings. This avoids duplicate rows and is cleaner.
 		joinClause := fmt.Sprintf(`
-			LEFT JOIN bookings b ON b.room_id = r.id 
-			AND b.status IN ('pending', 'confirmed') 
-			AND daterange(b.check_in, b.check_out, '[)') && daterange($%d::date, $%d::date, '[)')
+			AND NOT EXISTS (
+				SELECT 1 FROM bookings b 
+				WHERE b.room_id = r.id 
+				AND b.status IN ('pending', 'confirmed') 
+				AND daterange(b.check_in, b.check_out, '[)') && daterange($%d::date, $%d::date, '[)')
+			)
 		`, argCounter, argCounter+1)
 
-		query += joinClause
-		whereClauses = append(whereClauses, "b.id IS NULL")
+		whereClauses = append(whereClauses, joinClause)
 
 		args = append(args, *filter.CheckIn, *filter.CheckOut)
 		argCounter += 2
