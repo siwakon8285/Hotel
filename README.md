@@ -25,13 +25,28 @@
 การพัฒนาจะแยก Database (รันใน Docker) และ API (รันบนเครื่อง Local) ออกจากกัน
 
 ### Step 1 — Start PostgreSQL
+### Step 1 — Start PostgreSQL and Database setup
 
-คัดลอกไฟล์ Environment และรันเฉพาะ PostgreSQL:
-```bash
-cp .env.example .env
-make db-up
-```
-*(ถ้าเครื่องคุณใช้ port 5433 ไม่ได้ สามารถแก้ `POSTGRES_HOST_PORT=5434` ใน `.env` ได้)*
+1. **คัดลอกไฟล์ `.env`**
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **เริ่มการทำงาน Database**
+   ```bash
+   make db-setup
+   ```
+
+3. **ติดตั้ง Database Schema**
+   ```bash
+   make migrate-up
+   ```
+
+4. **สร้างข้อมูลจำลอง (Development Seed)**
+   ```bash
+   make seed
+   ```
+   *(หมายเหตุ: คำสั่งนี้ทำงานแบบ Idempotent สามารถรันซ้ำได้โดยไม่ทำให้ข้อมูลซ้ำซ้อน รันคำสั่งนี้เพื่อให้มีข้อมูลสมมติสำหรับการทดสอบบน development database คำสั่งจะเชื่อมต่อไปยัง PostgreSQL Docker service โดยตรง)*
 
 ### Step 2 — Start Go backend manually
 
@@ -67,6 +82,7 @@ Host machine
 ### Database Migrations
 - `make migrate-up` — รัน Migration สร้างโครงสร้างตารางล่าสุด
 - `make migrate-down` — ย้อนกลับ Migration ทั้งหมด (ลบตาราง)
+- `make seed` — ใส่ข้อมูลเริ่มต้นแบบ Idempotent สำหรับ Development (เชื่อมต่อตรงเข้า PostgreSQL Docker container)
 
 ## 🩺 การทำงานของ API และ Health Endpoints
 
