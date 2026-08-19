@@ -1,8 +1,15 @@
 import { hotelService } from "@/services/hotel.service";
+import { roomService } from "@/services/room.service";
 import { SiteHeader } from "@/components/shared/SiteHeader";
-import { Button } from "@/components/ui/button";
+import { HeroSection } from "@/components/home/HeroSection";
+import { IntroSection } from "@/components/home/IntroSection";
+import { FeaturedRoomsSection } from "@/components/home/FeaturedRoomsSection";
+import { WhyStaySection } from "@/components/home/WhyStaySection";
+import { SignatureExperienceSection } from "@/components/home/SignatureExperienceSection";
+import { GallerySection } from "@/components/home/GallerySection";
+import { BookingCTASection } from "@/components/home/BookingCTASection";
+import { SiteFooter } from "@/components/home/SiteFooter";
 
-// Optional: Fallback to prevent crashing if the backend is down during rendering
 async function getHotelData() {
   try {
     const hotels = await hotelService.getHotels();
@@ -13,53 +20,63 @@ async function getHotelData() {
   }
 }
 
+async function getRoomTypes() {
+  try {
+    // We fetch some rooms and extract unique room types since there isn't a direct /room-types endpoint
+    // Using arbitrary dates or empty dates to get general availability if the API allows it
+    const today = new Date().toISOString().split('T')[0];
+    const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+    const rooms = await roomService.searchRooms(today, tomorrow);
+    
+    const typesMap = new Map();
+    rooms.forEach(r => {
+      if (r.room_type && !typesMap.has(r.room_type.id)) {
+        typesMap.set(r.room_type.id, r.room_type);
+      }
+    });
+    
+    return Array.from(typesMap.values());
+  } catch (error) {
+    console.error("Failed to load room types:", error);
+    return [];
+  }
+}
+
 export default async function Home() {
   const hotel = await getHotelData();
+  const roomTypes = await getRoomTypes();
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-zinc-950 font-sans selection:bg-amber-500/30 selection:text-white overflow-hidden">
+      
       <SiteHeader />
       
-      <main className="flex-1 flex flex-col items-center justify-center pt-20">
-        <section className="relative w-full max-w-7xl mx-auto px-4 py-24 flex flex-col items-center text-center space-y-8 z-10">
-          <div className="space-y-4">
-            <h2 className="text-sm md:text-base font-semibold tracking-[0.2em] text-accent uppercase">
-              Welcome to
-            </h2>
-            <h1 className="font-heading text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-primary">
-              {hotel ? hotel.name : "AURORA GRAND HOTEL"}
-            </h1>
-            <p className="max-w-2xl mx-auto text-muted-foreground text-lg md:text-xl font-light">
-              {hotel 
-                ? hotel.description 
-                : "Explore an immersive hotel experience, from architecture to room selection. Stay Beyond the Ordinary."}
-            </p>
-          </div>
-
-          <div className="pt-8">
-            <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-lg rounded-none tracking-wide">
-              Explore the Hotel
-            </Button>
-          </div>
-        </section>
-
-        {/* 3D Canvas Placeholder Area */}
-        <section className="w-full max-w-7xl mx-auto px-4 py-12 flex flex-col items-center">
-          <div className="w-full aspect-video max-h-[60vh] bg-muted/30 border border-border flex items-center justify-center rounded-sm">
-            <div className="text-center space-y-2 opacity-50">
-              <div className="text-xl font-heading tracking-widest uppercase">3D Hotel Experience</div>
-              <p className="text-sm">Coming in the next implementation phase</p>
-            </div>
-          </div>
-        </section>
+      <main className="flex-1 flex flex-col">
+        <HeroSection 
+          hotelName={hotel?.name || "AURORA GRAND HOTEL"} 
+          description={hotel?.description || "Explore an immersive hotel experience, from architecture to room selection. Stay Beyond the Ordinary."}
+        />
         
-        {/* Error State Warning (Development) */}
-        {!hotel && (
-          <div className="fixed bottom-4 right-4 bg-destructive/10 text-destructive border border-destructive/20 p-4 rounded-sm text-sm">
-            Unable to load hotel information from backend.
-          </div>
-        )}
+        <IntroSection />
+        
+        <FeaturedRoomsSection roomTypes={roomTypes} />
+        
+        <WhyStaySection />
+        
+        <SignatureExperienceSection />
+        
+        <GallerySection />
+        
+        <BookingCTASection />
       </main>
+
+      <SiteFooter />
+
+      {!hotel && (
+        <div className="fixed bottom-4 right-4 bg-destructive/10 text-destructive border border-destructive/20 p-4 rounded-sm text-sm z-50">
+          Unable to load hotel information from backend.
+        </div>
+      )}
     </div>
   );
 }
