@@ -17,4 +17,9 @@ describe('SiteHeader Component', () => {
     render(<SiteHeader />);
     expect(screen.getByText('Book Now')).toBeInTheDocument();
   });
+
+  it('should render mobile menu toggle button', () => {
+    render(<SiteHeader />);
+    expect(screen.getByLabelText('Open menu')).toBeInTheDocument();
+  });
 });
