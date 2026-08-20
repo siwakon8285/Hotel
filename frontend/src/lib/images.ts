@@ -13,3 +13,9 @@ export const HOTEL_IMAGES = {
   signature: "/images/signature-experience.jpg",
   bookingCta: "/images/booking-cta.jpg"
 };
+
+export function getRoomTypeImage(roomTypeName: string): string {
+  const name = roomTypeName.toLowerCase();
+  if (name.includes('suite')) return HOTEL_IMAGES.rooms.suite;
+  return HOTEL_IMAGES.rooms.deluxe;
+}
