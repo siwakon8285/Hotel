@@ -134,7 +134,7 @@ func (r *roomRepoImpl) Search(ctx context.Context, filter domainRepos.RoomSearch
 	if filter.CheckIn != nil && filter.CheckOut != nil {
 		// Use NOT EXISTS to check for overlapping bookings. This avoids duplicate rows and is cleaner.
 		joinClause := fmt.Sprintf(`
-			AND NOT EXISTS (
+			NOT EXISTS (
 				SELECT 1 FROM bookings b 
 				WHERE b.room_id = r.id 
 				AND b.status IN ('pending', 'confirmed') 

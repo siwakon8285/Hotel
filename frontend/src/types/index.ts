@@ -23,8 +23,12 @@ export type Amenity = {
 export type RoomType = {
   id: string;
   name: string;
+  description?: string;
   base_price: string;
-  capacity: number;
+  currency: string;
+  max_guests: number;
+  bed_type: string;
+  room_size: number;
 };
 
 export type Room = {

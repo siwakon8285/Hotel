@@ -84,7 +84,6 @@ export function HeroSection({ hotelName, description }: HeroSectionProps) {
             src={HOTEL_IMAGES.hero}
             alt="Aurora Grand Hotel Exterior"
             fill
-            quality={95}
             className="object-cover object-[75%_center]"
             sizes="100vw"
             priority

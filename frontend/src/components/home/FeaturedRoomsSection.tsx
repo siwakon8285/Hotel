@@ -82,11 +82,11 @@ export function FeaturedRoomsSection({ roomTypes }: FeaturedRoomsSectionProps) {
                     <div className="flex gap-6 py-4 border-y border-white/10">
                       <div className="flex items-center text-zinc-300">
                         <Users className="w-5 h-5 mr-3 text-amber-500" />
-                        <span className="text-sm font-medium uppercase tracking-wider">{room.capacity} Guests</span>
+                        <span className="text-sm font-medium uppercase tracking-wider">{room.max_guests} Guests</span>
                       </div>
                       <div className="flex items-center text-zinc-300">
                         <BedDouble className="w-5 h-5 mr-3 text-amber-500" />
-                        <span className="text-sm font-medium uppercase tracking-wider">King Bed</span>
+                        <span className="text-sm font-medium uppercase tracking-wider">{room.bed_type}</span>
                       </div>
                     </div>
 

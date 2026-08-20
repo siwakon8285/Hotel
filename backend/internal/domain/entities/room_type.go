@@ -11,7 +11,7 @@ type RoomType struct {
 	HotelID     uuid.UUID
 	Name        string
 	Description string
-	BasePrice   int64 // Stored as satang
+	BasePrice   int64 // Stored as integral THB (fractional values will cause pgx scan errors)
 	MaxGuests   int
 	BedType     string
 	RoomSize    int
