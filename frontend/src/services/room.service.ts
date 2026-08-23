@@ -24,5 +24,9 @@ export const roomService = {
   
   getRoomsByFloor: async (floorId: string): Promise<Room[]> => {
     return apiFetch<Room[]>(`/floors/${floorId}/rooms`);
+  },
+
+  getRoomById: async (roomId: string): Promise<Room> => {
+    return apiFetch<Room>(`/rooms/${roomId}`);
   }
 };

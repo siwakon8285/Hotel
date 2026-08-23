@@ -53,4 +53,16 @@ describe('RoomCard Price Formatting', () => {
     render(<RoomCard room={createMockRoom("25000.00")} />);
     expect(screen.getByText(/THB 25,000/i)).toBeInTheDocument();
   });
+
+  it('renders a Link when exploreHref is provided', () => {
+    render(<RoomCard room={createMockRoom("4500.00")} exploreHref="/rooms/123" />);
+    const link = screen.getByRole('link', { name: /Explore/i });
+    expect(link).toHaveAttribute('href', '/rooms/123');
+  });
+
+  it('renders a disabled button when exploreHref is omitted', () => {
+    render(<RoomCard room={createMockRoom("4500.00")} />);
+    const button = screen.getByRole('button', { name: /Explore/i });
+    expect(button).toBeDisabled();
+  });
 });

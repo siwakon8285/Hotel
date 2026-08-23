@@ -4,6 +4,7 @@ import { RoomType } from "@/types";
 import { formatCurrency } from "@/lib/utils";
 import { ArrowRight, Users, BedDouble } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { HOTEL_IMAGES } from "@/lib/images";
 import { Reveal } from "@/components/motion/Reveal";
 
@@ -13,10 +14,10 @@ interface FeaturedRoomsSectionProps {
 
 // Temporary mapping of images to room types for presentation
 const roomImages: Record<string, string> = {
-  "DELUXE_ROOM": HOTEL_IMAGES.rooms.deluxe,
-  "PREMIER_ROOM": HOTEL_IMAGES.rooms.deluxe, // fallback
-  "EXECUTIVE_SUITE": HOTEL_IMAGES.rooms.suite,
-  "AURORA_SIGNATURE_SUITE": HOTEL_IMAGES.rooms.suite, // fallback
+  "DELUXE_ROOM": HOTEL_IMAGES.rooms.deluxe.hero,
+  "PREMIER_ROOM": HOTEL_IMAGES.rooms.deluxe.hero, // fallback
+  "EXECUTIVE_SUITE": HOTEL_IMAGES.rooms.suite.hero,
+  "AURORA_SIGNATURE_SUITE": HOTEL_IMAGES.rooms.suite.hero, // fallback
 };
 
 export function FeaturedRoomsSection({ roomTypes }: FeaturedRoomsSectionProps) {
@@ -40,10 +41,10 @@ export function FeaturedRoomsSection({ roomTypes }: FeaturedRoomsSectionProps) {
             </Reveal>
           </div>
           <Reveal animation="fade-up" delay={0.15}>
-            <a href="/rooms" className="group inline-flex items-center text-sm uppercase tracking-[0.2em] font-medium text-zinc-300 hover:text-white transition-colors">
+            <Link href="/rooms" className="group inline-flex items-center text-sm uppercase tracking-[0.2em] font-medium text-zinc-300 hover:text-white transition-colors">
               View All Rooms
               <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </a>
+            </Link>
           </Reveal>
         </div>
 
@@ -51,7 +52,7 @@ export function FeaturedRoomsSection({ roomTypes }: FeaturedRoomsSectionProps) {
         <div className="space-y-24 md:space-y-32">
           {featured.map((room, index) => {
             const isEven = index % 2 === 0;
-            const imgSrc = roomImages[room.name.toUpperCase().replace(/\s+/g, '_')] || HOTEL_IMAGES.rooms.deluxe;
+            const imgSrc = roomImages[room.name.toUpperCase().replace(/\s+/g, '_')] || HOTEL_IMAGES.rooms.deluxe.hero;
 
             return (
               <Reveal key={room.id} animation="fade-up" delay={index * 0.1}>
@@ -98,9 +99,9 @@ export function FeaturedRoomsSection({ roomTypes }: FeaturedRoomsSectionProps) {
                           <span className="text-sm text-zinc-500 ml-2">/ night</span>
                         </p>
                       </div>
-                      <a href={`/rooms/${room.id}`} className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors">
+                      <Link href={`/rooms/${room.id}`} className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors">
                         <ArrowRight className="w-5 h-5" />
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
