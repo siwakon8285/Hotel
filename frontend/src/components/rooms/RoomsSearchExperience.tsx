@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Room, RoomType } from "@/types";
 import { roomService } from "@/services/room.service";
@@ -205,6 +205,15 @@ export function RoomsSearchExperience() {
     router.push(`/rooms?${newParams.toString()}`, { scroll: false });
   };
 
+  const buildExploreHref = (roomId: string) => {
+    const p = new URLSearchParams();
+    if (formState.checkIn) p.set("check_in", formState.checkIn);
+    if (formState.checkOut) p.set("check_out", formState.checkOut);
+    if (formState.guests) p.set("guests", formState.guests);
+    const qs = p.toString();
+    return qs ? `/rooms/${roomId}?${qs}` : `/rooms/${roomId}`;
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-10 py-16 md:py-24">
       {/* Search Bar */}
@@ -303,7 +312,7 @@ export function RoomsSearchExperience() {
       ) : (
         <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" stagger={0.1}>
           {rooms.map(room => (
-            <RoomCard key={room.id} room={room} />
+            <RoomCard key={room.id} room={room} exploreHref={buildExploreHref(room.id)} />
           ))}
         </StaggerGroup>
       )}
